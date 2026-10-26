@@ -878,6 +878,225 @@ body {
   }
 }
 
+/* ==========================================================================
+   MOBILE RESPONSIVE — Full Breakpoints
+   ========================================================================== */
+
+/* ---------- Navbar ---------- */
+@media (max-width: 900px) {
+  .navbar {
+    top: 8px;
+    width: 98%;
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  /* Hide text labels on view buttons, show only icons */
+  .view-btn {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+
+  /* Resume button: icon only */
+  .resume-download-btn span { display: none; }
+  .resume-download-btn { padding: 8px 10px; }
+
+  /* Greeting pill: icon only */
+  .greeting-pill span { display: none; }
+}
+
+@media (max-width: 600px) {
+  /* Stack navbar: brand on top, controls below */
+  .navbar {
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    top: 6px;
+  }
+
+  .nav-brand { width: 100%; justify-content: center; }
+
+  .view-switcher-menu {
+    order: 3;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    gap: 2px;
+  }
+
+  .view-btn { font-size: 0.7rem; padding: 5px 8px; }
+
+  .nav-actions { order: 2; }
+
+  /* Push content down so navbar doesn't overlap */
+  .view-container { padding-top: 120px; }
+}
+
+/* ---------- Hero Section ---------- */
+@media (max-width: 768px) {
+  .hero-content-overlay {
+    flex-direction: column;
+    padding: 130px 18px 60px;
+    align-items: flex-start;
+    justify-content: flex-end;
+    min-height: 100vh;
+  }
+
+  .hero-text-panel { max-width: 100%; }
+
+  .hero-name { font-size: clamp(2.8rem, 12vw, 4.5rem); }
+  .hero-title { font-size: 1.35rem; }
+  .hero-subtitle { font-size: 1rem; }
+
+  .hero-cta {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .hero-cta a, .hero-cta button {
+    font-size: 0.88rem;
+    padding: 11px 18px;
+  }
+
+  .hero-stats { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat-number { font-size: 1.35rem; }
+  .stat-label { font-size: 0.72rem; }
+
+  .hero-speech-panel { display: none; }
+}
+
+/* ---------- Sections ---------- */
+@media (max-width: 768px) {
+  .section { padding: 60px 16px; }
+  .section-title { font-size: 1.8rem; }
+  .section-desc { font-size: 0.95rem; }
+
+  /* Experience card */
+  .exp-card { padding: 20px 16px; }
+  .exp-header { flex-direction: column; gap: 8px; }
+  .exp-role { font-size: 1.2rem; }
+
+  /* Architecture nodes */
+  .arch-nodes { grid-template-columns: repeat(2, 1fr); }
+
+  /* Sim controls — stack vertically */
+  .sim-controls { flex-direction: column; }
+  .sim-btn { width: 100%; text-align: center; justify-content: center; }
+
+  /* Project cards — single column */
+  .project-featured {
+    grid-template-columns: 1fr;
+    padding: 20px 16px;
+    gap: 20px;
+  }
+
+  /* Bullets — single column */
+  .exp-bullets { grid-template-columns: 1fr; }
+
+  /* Skills grid */
+  .skills-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+
+  /* Skills filter — wrap nicely */
+  .skills-filter { gap: 8px; }
+  .filter-btn { padding: 6px 14px; font-size: 0.85rem; }
+}
+
+/* ---------- Onboarding / Modals ---------- */
+@media (max-width: 540px) {
+  .greeting-modal {
+    padding: 24px 16px;
+    max-width: 100%;
+  }
+
+  .title-options { gap: 6px; }
+  .title-btn { padding: 7px 12px; font-size: 0.85rem; }
+
+  /* Layout preset buttons — wrap */
+  .greeting-modal .chip-btn { font-size: 0.78rem; padding: 5px 10px; }
+
+  .detail-modal-box {
+    padding: 20px 16px;
+    max-height: 90vh;
+  }
+}
+
+/* ---------- AI Chat Box ---------- */
+@media (max-width: 480px) {
+  .ai-chat-box {
+    width: calc(100vw - 20px);
+    right: 10px;
+    bottom: 90px;
+    height: calc(100vh - 120px);
+    max-height: none;
+  }
+
+  .ai-fab {
+    width: 54px;
+    height: 54px;
+  }
+}
+
+/* ---------- Google View ---------- */
+@media (max-width: 768px) {
+  .g-logo-text { font-size: 3.5rem; }
+
+  .g-serp-container {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 20px;
+  }
+
+  .g-knowledge-panel { display: none; } /* hide knowledge panel on small screens */
+}
+
+/* ---------- Zomato View ---------- */
+@media (max-width: 600px) {
+  .zomato-hero-banner {
+    flex-direction: column;
+    padding: 24px 16px;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .zomato-menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Netflix View ---------- */
+@media (max-width: 600px) {
+  .netflix-hero {
+    height: 50vh;
+    padding: 20px 16px;
+  }
+
+  .netflix-row-title { font-size: 1.1rem; }
+
+  .netflix-card {
+    min-width: 160px;
+    height: 100px;
+  }
+}
+
+/* ---------- Spotify View ---------- */
+@media (max-width: 700px) {
+  .spotify-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .spotify-sidebar { display: none; } /* collapse sidebar on mobile */
+
+  .spotify-main { padding: 16px; }
+}
+
+/* ---------- Terminal ---------- */
+@media (max-width: 600px) {
+  .terminal-body {
+    font-size: 0.8rem;
+    padding: 14px;
+    min-height: 200px;
+  }
+}
+
 
 /* ==========================================================================
    FULL-PAGE BACKGROUND VIDEOS (Google / Zomato / Netflix views)
