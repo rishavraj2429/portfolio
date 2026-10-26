@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rishav Raj | Multi-Website Interactive Portfolio</title>
+  <meta name="description" content="Multi-Website Interactive Portfolio of Rishav Raj (.NET Full Stack Manager at Bandhan Bank & AI Engineer). Dynamic clone interfaces for Google, Zomato, Netflix, Spotify, and Cyber Portfolio.">
+
+  <!-- Favicon & Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&display=swap">
+</head>
+<body class="theme-cyber">
+
+  <!-- Background Canvas Particles & Ambient Lights -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- ==========================================================================
+       DETAILED CARD INFORMATION MODAL (POPS UP ON CARD CLICK)
+       ========================================================================== -->
+  <div id="detail-modal" class="modal-overlay hidden">
+    <div class="detail-modal-box">
+      <i class="fa-solid fa-xmark modal-close-icon" id="detail-modal-close"></i>
+      <div id="detail-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       ONBOARDING GREETING MODAL (WITH WEBSITE LAYOUT CLONE SELECTOR)
+       ========================================================================== -->
+  <div id="onboarding-modal" class="modal-overlay">
+    <div class="greeting-modal">
+      <div class="modal-avatar-area">
+        <div id="modal-mascot-preview"></div>
+      </div>
+
+      <h2 style="font-size: 1.8rem; margin-bottom: 6px;">Welcome! 👋</h2>
+      <p style="color: var(--text-muted); font-size: 0.92rem;">
+        May I know your name & preferred website experience, <b style="color: var(--primary);">Sir / Madam</b>?
+      </p>
+
+      <!-- Title Selection Buttons -->
+      <div class="title-options">
+        <button type="button" class="title-btn selected" data-title="Sir">Sir</button>
+        <button type="button" class="title-btn" data-title="Madam">Madam</button>
+        <button type="button" class="title-btn" data-title="Dr.">Dr.</button>
+        <button type="button" class="title-btn" data-title="Friend">Friend</button>
+      </div>
+
+      <!-- Visitor Name Input Field -->
+      <div class="name-input-group" style="margin-bottom: 12px;">
+        <input type="text" id="visitor-name-input" class="name-input" placeholder="Your Name (e.g. Alex, Sarah)..." autocomplete="off">
+      </div>
+
+      <!-- Choose Website Interface Clone -->
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 700;">
+        🌐 Select Website Interface Clone to Experience:
+      </div>
+      <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px;">
+        <button type="button" class="chip-btn layout-preset-btn active" data-view="classic">⚡ Cyber Portfolio UI</button>
+        <button type="button" class="chip-btn layout-preset-btn" data-view="google">🔍 Google Search UI</button>
+        <button type="button" class="chip-btn layout-preset-btn" data-view="zomato">🍕 Zomato App UI</button>
+        <button type="button" class="chip-btn layout-preset-btn" data-view="netflix">🎬 Netflix Streaming UI</button>
+        <button type="button" class="chip-btn layout-preset-btn" data-view="spotify">🎧 Spotify Player UI</button>
+      </div>
+
+      <!-- Action Button -->
+      <button type="button" id="modal-launch-btn" class="btn-primary" style="width: 100%; justify-content: center;">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Transform & Launch Website
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       NAVBAR / HEADER
+       ========================================================================== -->
+  <nav class="navbar glass-panel">
+    <a href="#" class="nav-brand">
+      <div class="brand-avatar">RR</div>
+      <div class="brand-text">Rishav Raj <span class="text-cyan" style="font-size: 0.8rem; font-weight: 500;">.NET & AI</span></div>
+    </a>
+
+    <!-- Website Clone Interface Transformer Controls -->
+    <div class="view-switcher-menu">
+      <button class="view-btn active" data-view="classic"><i class="fa-solid fa-bolt"></i> Cyber UI</button>
+      <button class="view-btn" data-view="google"><i class="fa-solid fa-magnifying-glass"></i> Google</button>
+      <button class="view-btn" data-view="zomato"><i class="fa-solid fa-utensils"></i> Zomato</button>
+      <button class="view-btn" data-view="netflix"><i class="fa-solid fa-film"></i> Netflix</button>
+      <button class="view-btn" data-view="spotify"><i class="fa-solid fa-music"></i> Spotify</button>
+    </div>
+
+    <div class="nav-actions">
+      <!-- Direct Resume PDF Download for Recruiters -->
+      <a href="Rishav_Raj_Resume.pdf" download="Rishav_Raj_Resume.pdf" target="_blank" class="resume-download-btn" id="nav-resume-btn" title="Download Official Resume PDF (1-Page ATS)">
+        <i class="fa-solid fa-file-arrow-down"></i>
+        <span>Resume PDF</span>
+      </a>
+
+      <div id="user-greeting-pill" class="greeting-pill" title="Click to edit profile & change website layout">
+        <i class="fa-solid fa-user-gear"></i>
+        <span id="greeting-pill-text">Hi, Guest Sir</span>
+      </div>
+
+      <!-- Cyber UI Color Theme Switcher Dropdown -->
+      <div class="theme-dropdown">
+        <button id="theme-toggle-btn" class="btn-icon" title="Change Cyber UI Theme">🎨</button>
+        <div id="theme-menu" class="theme-menu hidden">
+          <button class="theme-opt" data-theme="cyber">🩵 Cyber Cyan</button>
+          <button class="theme-opt" data-theme="matrix">💚 Matrix Green</button>
+          <button class="theme-opt" data-theme="synthwave">💜 Synthwave Neon</button>
+          <button class="theme-opt" data-theme="obsidian">🖤 Executive Dark</button>
+        </div>
+      </div>
+
+      <button id="mute-btn" class="btn-icon" title="Toggle Sound SFX">🔊</button>
+    </div>
+  </nav>
+
+  <!-- ==========================================================================
+       VIEW 1: ⚡ FULL CYBER PORTFOLIO UI (#view-classic)
+       ========================================================================== -->
+  <div id="view-classic" class="view-container active">
+    <!-- Hero Section: Full-screen cinematic video background -->
+    <section id="overview" class="hero-section hero-video-section">
+
+      <!-- FULL-SCREEN BACKGROUND VIDEO -->
+      <video id="hero-video" class="hero-bg-video" autoplay muted loop playsinline
+             poster="images/rishav_3d_avatar.png">
+        <source src="videos/hero.mp4" type="video/mp4">
+      </video>
+
+      <!-- Dark gradient so text stays readable -->
+      <div class="hero-bg-overlay"></div>
+
+      <!-- All content overlaid on top of video -->
+      <div class="hero-content-overlay">
+
+        <!-- LEFT: text, CTAs, stats -->
+        <div class="hero-text-panel">
+          <div class="status-badge">
+            <span class="pulse-dot"></span>
+            <span id="hero-company-badge">Manager @ Bandhan Bank | Open for Tech Leadership &amp; AI Roles</span>
+          </div>
+          <p id="hero-personalized-text" style="color: var(--primary); font-weight: 700; font-size: 1.1rem; margin-bottom: 8px;">
+            Greetings, Visitor - Welcome to my universe!
+          </p>
+          <p class="hero-kicker">// .NET Full Stack Manager &amp; AI Engineer</p>
+          <h1 class="hero-name">Rishav <span>Raj</span></h1>
+          <h2 id="hero-headline-dynamic" class="hero-title">
+            Architecting <span class="text-gradient">Scalable Microservices</span> &amp; AI Solutions
+          </h2>
+          <p id="hero-subtitle-dynamic" class="hero-subtitle">
+            <b>.NET Full Stack Developer (Manager)</b> with 2+ years of experience engineering
+            high-throughput C# microservices, React.js/Angular dashboards, Kafka/Redis pipelines,
+            and cutting-edge LLM RAG applications. BTech in CSE from <b>BIT Mesra</b> (CGPA 8.1).
+          </p>
+          <div class="hero-meta">
+            <span><span class="pulse-dot"></span> Available for work</span>
+            <span>2+ Years</span>
+            <span>Bandhan Bank</span>
+          </div>
+          <div class="hero-cta">
+            <a href="#contact" class="btn-primary">
+              <i class="fa-solid fa-paper-plane"></i> Contact Rishav
+            </a>
+            <a href="Rishav_Raj_Resume.pdf" download="Rishav_Raj_Resume.pdf" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff;">
+              <i class="fa-solid fa-file-arrow-down"></i> Download Resume (PDF)
+            </a>
+            <a href="https://codex-hack-ugrh.vercel.app/" target="_blank" class="btn-secondary">
+              <i class="fa-solid fa-earth-americas text-cyan"></i> GAIA Live Demo
+            </a>
+            <a href="https://nanogpt-shakespeare-fbkhytvvfjpnvxyn3omrxx.streamlit.app/" target="_blank" class="btn-secondary">
+              <i class="fa-solid fa-feather-pointed text-purple"></i> nanoGPT Live App
+            </a>
+            <a href="mailto:rishavrajjha24@gmail.com" class="btn-secondary">
+              <i class="fa-solid fa-envelope text-cyan"></i> Direct Email
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-card glass-panel" onclick="openDetailModal('bandhan');">
+              <div class="stat-number">12+</div>
+              <div class="stat-label">Microservices Built</div>
+            </div>
+            <div class="stat-card glass-panel" onclick="openDetailModal('bandhan');">
+              <div class="stat-number">500+</div>
+              <div class="stat-label">Bank Branches Served</div>
+            </div>
+            <div class="stat-card glass-panel" onclick="openDetailModal('bandhan');">
+              <div class="stat-number">100K+</div>
+              <div class="stat-label">Accounts Monitored</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: speech bubble floats over avatar area -->
+        <div class="hero-speech-panel">
+          <div id="mascot-speech" class="mascot-speech-bubble">
+            Hi there! I am Rishav, speak to me via the AI assistant below!
+          </div>
+          <div class="avatar-particles" id="avatar-particles"></div>
+        </div>
+
+      </div>
+
+      <!-- Keep hidden mascot stage for JS compatibility -->
+      <div id="hero-mascot" class="mascot-stage" style="display:none;"></div>
+    </section>
+
+    <!-- Experience & Bandhan Bank Platform Section -->
+    <section id="experience" class="section">
+      <div class="section-header">
+        <span class="section-tag">Enterprise Accomplishments</span>
+        <h2 class="section-title">Bandhan Bank <span class="text-gradient">Platform Impact</span></h2>
+        <p class="section-desc">
+          Lead .NET Full Stack Manager architecting NEEV microservices platform serving 500+ branches, 1,200+ Branch Heads, and 100K+ accounts.
+        </p>
+      </div>
+
+      <div class="exp-card glass-panel">
+        <div class="exp-header">
+          <div>
+            <h3 class="exp-role">.NET Full Stack Developer (Manager)</h3>
+            <div class="exp-company"><i class="fa-solid fa-building-columns"></i> Bandhan Bank, India</div>
+          </div>
+          <span class="exp-period">Jun 2025 -- Present</span>
+        </div>
+
+        <!-- Interactive System Architecture Diagram -->
+        <div class="arch-diagram">
+          <div style="font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
+            <i class="fa-solid fa-diagram-project text-cyan"></i> Interactive NEEV System Architecture (Click nodes to inspect):
+          </div>
+          <div class="arch-nodes">
+            <div class="arch-node" onclick="openDetailModal('bandhan');">
+              <div class="arch-icon text-cyan"><i class="fa-solid fa-server"></i></div>
+              <div class="arch-title">12+ Microservices</div>
+              <div class="arch-detail">C# / ASP.NET Core</div>
+            </div>
+            <div class="arch-node" onclick="openDetailModal('bandhan');">
+              <div class="arch-icon text-purple"><i class="fa-solid fa-chart-line"></i></div>
+              <div class="arch-title">1,200+ Dashboards</div>
+              <div class="arch-detail">React.js & AngularJS</div>
+            </div>
+            <div class="arch-node" onclick="openDetailModal('bandhan');">
+              <div class="arch-icon text-emerald"><i class="fa-solid fa-plug"></i></div>
+              <div class="arch-title">TransUnion APIs</div>
+              <div class="arch-detail">REST / EF / Dapper</div>
+            </div>
+            <div class="arch-node" onclick="openDetailModal('kafka');">
+              <div class="arch-icon text-cyan"><i class="fa-solid fa-bolt"></i></div>
+              <div class="arch-title">Kafka & Redis</div>
+              <div class="arch-detail">sub-100ms Latency</div>
+            </div>
+            <div class="arch-node" onclick="openDetailModal('devops');">
+              <div class="arch-icon text-purple"><i class="fa-brands fa-docker"></i></div>
+              <div class="arch-title">AWS EKS & CI/CD</div>
+              <div class="arch-detail">Zero Downtime</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Microservice Event Simulator -->
+        <div class="sim-container">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+            <h4 style="font-size: 1.1rem; font-weight: 700;">
+              <i class="fa-solid fa-gauge-high text-cyan"></i> Live Microservice Event Pipeline Simulator
+            </h4>
+            <span style="font-size: 0.8rem; color: #34d399;" id="sim-status-text">Ready to run high-throughput pipeline simulation</span>
+          </div>
+
+          <div class="sim-controls">
+            <button id="sim-btn-leads" class="sim-btn"><i class="fa-solid fa-play"></i> Simulate 10,000 Concurrent Lead Events</button>
+            <button id="sim-btn-api" class="sim-btn" style="border-color: #a855f7; color: #a855f7;"><i class="fa-solid fa-bolt"></i> Trigger TransUnion Bureau API Batch</button>
+            <button id="sim-btn-cache" class="sim-btn" style="border-color: #34d399; color: #34d399;"><i class="fa-solid fa-database"></i> Flush Redis & Sync PostgreSQL</button>
+          </div>
+
+          <div class="sim-metrics-grid">
+            <div class="sim-metric-box"><div id="sim-req-sec" class="sim-val">10,000 req/s</div><div class="sim-lbl">Throughput</div></div>
+            <div class="sim-metric-box"><div id="sim-latency" class="sim-val" style="color: #34d399;">&lt; 45 ms</div><div class="sim-lbl">API Latency</div></div>
+            <div class="sim-metric-box"><div id="sim-load" class="sim-val" style="color: #a855f7;">24 %</div><div class="sim-lbl">Server CPU Load</div></div>
+          </div>
+        </div>
+
+        <ul class="exp-bullets">
+          <li class="bullet-item"><i class="fa-solid fa-circle-check bullet-icon"></i><div><b>Microservice Platform (35% Efficiency Boost):</b> Engineered 12+ ETB/NTB reporting microservices using ASP.NET MVC, C#, AngularJS, React.js, Redux, and SQL Server for 500+ bank branches.</div></li>
+          <li class="bullet-item"><i class="fa-solid fa-circle-check bullet-icon"></i><div><b>Role-Based Dashboards:</b> Designed interactive dashboards for 1,200+ Branch & Cluster Heads monitoring 100K+ customer accounts in real-time.</div></li>
+          <li class="bullet-item"><i class="fa-solid fa-circle-check bullet-icon"></i><div><b>API Integration (80% Effort Cut):</b> Integrated TransUnion Bureau Trigger APIs with NEEV LMS using RESTful Web APIs, Entity Framework, ADO.NET, and Dapper.</div></li>
+          <li class="bullet-item"><i class="fa-solid fa-circle-check bullet-icon"></i><div><b>10K+ Lead Pipelines & DevOps:</b> Streamlined CIF/MRN lead pipelines via C#, LINQ, Node.js, and Python (99.9% uptime), cutting release cycles by 50% using Docker, AWS EKS, and CI/CD.</div></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Projects Section + GAIA 4-Slider Climate Sandbox -->
+    <section id="projects" class="section">
+      <div class="section-header">
+        <span class="section-tag">Featured Innovation</span>
+        <h2 class="section-title">GAIA Climate <span class="text-gradient">AI Platform</span></h2>
+        <p class="section-desc">
+          Governance Assistant for Intelligent Climate Action — Agentic AI platform built with React, FastAPI, OpenAI LLMs, LangGraph, and RAG pipelines.
+        </p>
+      </div>
+
+      <div class="project-featured glass-panel">
+        <div>
+          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 16px;">GAIA — Climate Action Governance Assistant</h3>
+          <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 1rem; line-height: 1.6;">
+            An advanced AI-powered climate planning platform integrating <b>5+ climate and geospatial data layers</b>. Visualizes urban heat hotspots across <b>1000+ mapped locations</b>.
+          </p>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
+            <a href="https://codex-hack-ugrh.vercel.app/" target="_blank" class="btn-primary"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Platform Demo</a>
+            <button class="btn-secondary" onclick="openDetailModal('gaia');"><i class="fa-solid fa-circle-info"></i> Complete Info</button>
+          </div>
+        </div>
+
+        <!-- ENHANCED GAIA CLIMATE SANDBOX (4 Interactive Simulation Sliders + 4 Metric Gauges) -->
+        <div class="sandbox-container">
+          <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-sliders text-cyan"></i> GAIA Interactive Climate Simulation Sandbox
+          </h4>
+
+          <div class="sandbox-slider-group">
+            <div class="sandbox-slider-label"><span>🌳 Urban Tree Plantation</span><span id="gaia-val-trees" class="text-cyan">10,000 Trees</span></div>
+            <input type="range" id="gaia-slider-trees" class="sandbox-slider" min="0" max="50000" step="1000" value="10000">
+          </div>
+
+          <div class="sandbox-slider-group">
+            <div class="sandbox-slider-label"><span>🏠 Cool Roof & Solar Coating</span><span id="gaia-val-roofs" class="text-purple">30% Coverage</span></div>
+            <input type="range" id="gaia-slider-roofs" class="sandbox-slider" min="0" max="100" step="5" value="30">
+          </div>
+
+          <div class="sandbox-slider-group">
+            <div class="sandbox-slider-label"><span>🌿 Rooftop Greening</span><span id="gaia-val-green" class="text-emerald">200 Hectares</span></div>
+            <input type="range" id="gaia-slider-green" class="sandbox-slider" min="0" max="1000" step="50" value="200">
+          </div>
+
+          <div class="sandbox-slider-group">
+            <div class="sandbox-slider-label"><span>⚡ Renewable Microgrid Transition</span><span id="gaia-val-grid" style="color:#f59e0b;">40% Green Grid</span></div>
+            <input type="range" id="gaia-slider-grid" class="sandbox-slider" min="0" max="100" step="5" value="40">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;">
+            <div class="sim-metric-box"><div id="gaia-result-temp" class="sim-val" style="color: #34d399;">-2.4°C</div><div class="sim-lbl">Urban Temp Drop</div></div>
+            <div class="sim-metric-box"><div id="gaia-result-co2" class="sim-val" style="color: var(--primary);">18,450 Tons</div><div class="sim-lbl">Annual CO2 Offset</div></div>
+            <div class="sim-metric-box"><div id="gaia-result-savings" class="sim-val" style="color: #a855f7;">$245,000</div><div class="sim-lbl">Energy Cost Savings</div></div>
+            <div class="sim-metric-box"><div id="gaia-result-aqi" class="sim-val" style="color: #f59e0b;">+32 Points</div><div class="sim-lbl">Clean Air Gain (AQI)</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- nanoGPT Shakespeare Project Card + Interactive Verse Generator Sandbox -->
+      <div class="project-featured glass-panel" style="margin-top: 36px;">
+        <div>
+          <div style="display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(168, 85, 247, 0.15); border: 1px solid #a855f7; color: #c084fc; font-size: 0.8rem; font-weight: 700; margin-bottom: 12px;">
+            <i class="fa-solid fa-brain"></i> Deep Learning & Generative AI
+          </div>
+          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 16px;">nanoGPT — Shakespeare LLM Text Generator</h3>
+          <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 1rem; line-height: 1.6;">
+            A lightweight, high-performance generative transformer model based  <b>nanoGPT architecture</b> trained on the <b>Tiny Shakespeare dataset</b>. Features real-time autoregressive character &amp; token-level text generation with temperature scaling and interactive prompt sampling.
+          </p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;">
+            <span class="tag" style="border-color: #a855f7; color: #c084fc;">PyTorch</span>
+            <span class="tag" style="border-color: var(--primary); color: var(--primary);">Transformer</span>
+            <span class="tag" style="border-color: #34d399; color: #34d399;">nanoGPT</span>
+            <span class="tag" style="border-color: #f59e0b; color: #f59e0b;">Streamlit</span>
+            <span class="tag">Python</span>
+            <span class="tag">Generative AI</span>
+          </div>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
+            <a href="https://nanogpt-shakespeare-fbkhytvvfjpnvxyn3omrxx.streamlit.app/" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #a855f7, #6366f1);"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Streamlit App</a>
+            <button class="btn-secondary" onclick="openDetailModal('nanogpt');"><i class="fa-solid fa-circle-info"></i> Complete Info</button>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE NANOGPT SHAKESPEARE GENERATOR SANDBOX -->
+        <div class="sandbox-container">
+          <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-feather-pointed text-purple"></i> nanoGPT Live Generation Sandbox
+          </h4>
+
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600;">Conditioning Prompt Seed:</label>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+              <button type="button" class="chip-btn nano-seed-chip active" data-seed="To be, or not to be:">"To be, or not to be:"</button>
+              <button type="button" class="chip-btn nano-seed-chip" data-seed="O Romeo, Romeo!">"O Romeo, Romeo!"</button>
+              <button type="button" class="chip-btn nano-seed-chip" data-seed="Friends, Romans, countrymen:">"Friends, Romans..."</button>
+            </div>
+            <input type="text" id="nanogpt-prompt-input" class="name-input" value="To be, or not to be:" style="text-align: left; padding: 10px 14px; font-size: 0.9rem;" placeholder="Type custom prompt seed...">
+          </div>
+
+          <div class="sandbox-slider-group">
+            <div class="sandbox-slider-label"><span>🔥 Temperature (Creativity)</span><span id="nano-val-temp" class="text-purple">0.80</span></div>
+            <input type="range" id="nano-slider-temp" class="sandbox-slider" min="0.2" max="1.4" step="0.05" value="0.80" style="accent-color: #a855f7;">
+          </div>
+
+          <div class="sandbox-slider-group" style="margin-bottom: 14px;">
+            <div class="sandbox-slider-label"><span>📏 Max New Tokens</span><span id="nano-val-tokens" class="text-cyan">150 Tokens</span></div>
+            <input type="range" id="nano-slider-tokens" class="sandbox-slider" min="50" max="300" step="25" value="150">
+          </div>
+
+          <button type="button" id="nanogpt-generate-btn" class="sim-btn" style="width: 100%; border-color: #a855f7; color: #c084fc; margin-bottom: 14px;">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Shakespearean Text
+          </button>
+
+          <!-- Generated Text Output Box -->
+          <div id="nanogpt-output-box" style="background: rgba(5, 10, 20, 0.85); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: var(--radius-sm); padding: 14px; font-family: var(--font-code); font-size: 0.86rem; color: #e2e8f0; line-height: 1.6; max-height: 140px; overflow-y: auto; white-space: pre-wrap;">To be, or not to be: that is the question:
+Whether 'tis nobler in the mind to suffer
+The slings and arrows of outrageous fortune,
+Or to take arms against a sea of troubles,
+And by opposing end them? To die: to sleep...</div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px;">
+            <div class="sim-metric-box" style="padding: 10px;"><div id="nano-metric-tps" class="sim-val" style="color: #c084fc; font-size: 1.25rem;">148 tok/s</div><div class="sim-lbl">Inference Speed</div></div>
+            <div class="sim-metric-box" style="padding: 10px;"><div id="nano-metric-loss" class="sim-val" style="color: #34d399; font-size: 1.25rem;">1.47 Loss</div><div class="sim-lbl">Validation Perplexity</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TikTokenizer Project Card + Interactive Tokenizer Visualizer Sandbox -->
+      <div class="project-featured glass-panel" style="margin-top: 36px;">
+        <div>
+          <div style="display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(0, 240, 255, 0.15); border: 1px solid var(--primary); color: var(--primary); font-size: 0.8rem; font-weight: 700; margin-bottom: 12px;">
+            <i class="fa-solid fa-shapes"></i> LLM Infrastructure &amp; Tokenization
+          </div>
+          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 16px;">TikTokenizer — Interactive LLM Tokenizer Playground</h3>
+          <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 1rem; line-height: 1.6;">
+            A real-time subword tokenization visualizer and playground built for exploring Byte Pair Encoding (BPE) algorithms used by OpenAI models (GPT-4o, GPT-4, and GPT-3.5). Inspect token splits, numerical token IDs, byte conversions, and compute exact API prompt pricing.
+          </p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;">
+            <span class="tag" style="border-color: var(--primary); color: var(--primary);">Next.js</span>
+            <span class="tag" style="border-color: #34d399; color: #34d399;">WebAssembly</span>
+            <span class="tag" style="border-color: #a855f7; color: #c084fc;">tiktoken</span>
+            <span class="tag" style="border-color: #f59e0b; color: #f59e0b;">BPE Tokenizer</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">Vercel</span>
+          </div>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
+            <a href="https://tiktokenizer.vercel.app/" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #00f0ff, #0284c7); color: #000;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Tokenizer App</a>
+            <button class="btn-secondary" onclick="openDetailModal('tiktokenizer');"><i class="fa-solid fa-circle-info"></i> Complete Info</button>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE TIKTOKENIZER SANDBOX -->
+        <div class="sandbox-container">
+          <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-layer-group text-cyan"></i> Live Subword Tokenization Visualizer
+          </h4>
+
+          <div style="margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Text to Tokenize:</label>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="chip-btn tik-preset-chip active" data-text="Large Language Models tokenize prompts with BPE.">Sample 1</button>
+                <button type="button" class="chip-btn tik-preset-chip" data-text="Microservices in C# with Kafka & Redis pipelines.">Sample 2</button>
+              </div>
+            </div>
+            <input type="text" id="tik-input" class="name-input" value="Large Language Models tokenize prompts with BPE." style="text-align: left; padding: 10px 14px; font-size: 0.9rem;" placeholder="Type any text to tokenize...">
+          </div>
+
+          <div style="margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Active Model Encoding:</span>
+            <div style="display: flex; gap: 6px;">
+              <button type="button" class="chip-btn tik-enc-chip active" data-enc="o200k_base">o200k_base (GPT-4o)</button>
+              <button type="button" class="chip-btn tik-enc-chip" data-enc="cl100k_base">cl100k_base (GPT-4)</button>
+            </div>
+          </div>
+
+          <!-- Color-coded Token Visualization Container -->
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600;">Visual Token Segments:</div>
+          <div id="tik-tokens-display" style="background: rgba(5, 10, 20, 0.85); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: var(--radius-sm); padding: 12px; min-height: 70px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-family: var(--font-code); font-size: 0.88rem;"></div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 14px;">
+            <div class="sim-metric-box" style="padding: 10px;"><div id="tik-metric-count" class="sim-val" style="color: var(--primary); font-size: 1.25rem;">8</div><div class="sim-lbl">Tokens</div></div>
+            <div class="sim-metric-box" style="padding: 10px;"><div id="tik-metric-chars" class="sim-val" style="color: #34d399; font-size: 1.25rem;">53</div><div class="sim-lbl">Characters</div></div>
+            <div class="sim-metric-box" style="padding: 10px;"><div id="tik-metric-ratio" class="sim-val" style="color: #c084fc; font-size: 1.25rem;">6.6</div><div class="sim-lbl">Chars / Token</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Parallel Universe Project Card + Multiverse Simulator Sandbox -->
+      <div class="project-featured glass-panel" style="margin-top: 36px;">
+        <div>
+          <div style="display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(52, 211, 153, 0.15); border: 1px solid #34d399; color: #34d399; font-size: 0.8rem; font-weight: 700; margin-bottom: 12px;">
+            <i class="fa-solid fa-atom"></i> Multiverse Simulation &amp; WebGL
+          </div>
+          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 16px;">Parallel Universe — Multiverse Experience Platform</h3>
+          <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 1rem; line-height: 1.6;">
+            An interactive multiverse exploration platform visualizing branching quantum realities, parallel timelines, and dimensional divergence. Built with high-performance reactive web architecture, fluid animations, and immersive spatial timeline tracking.
+          </p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;">
+            <span class="tag" style="border-color: #34d399; color: #34d399;">React.js</span>
+            <span class="tag" style="border-color: var(--primary); color: var(--primary);">WebGL</span>
+            <span class="tag" style="border-color: #a855f7; color: #c084fc;">Interactive Canvas</span>
+            <span class="tag" style="border-color: #f59e0b; color: #f59e0b;">Quantum Simulation</span>
+            <span class="tag">Tailwind CSS</span>
+            <span class="tag">Vercel</span>
+          </div>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
+            <a href="https://paralleluniverse-one.vercel.app/" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #10b981, #06b6d4); color: #000;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Multiverse App</a>
+            <button class="btn-secondary" onclick="openDetailModal('paralleluniverse');"><i class="fa-solid fa-circle-info"></i> Complete Info</button>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE MULTIVERSE TIMELINE SANDBOX -->
+        <div class="sandbox-container">
+          <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-diagram-next text-emerald"></i> Quantum Timeline Divergence Simulator
+          </h4>
+
+          <div class="sandbox-slider-group">
+            <div class="sandbox-slider-label"><span>🌐 Parallel Dimensions Active</span><span id="pu-val-branches" class="text-emerald">6 Realities</span></div>
+            <input type="range" id="pu-slider-branches" class="sandbox-slider" min="2" max="12" step="1" value="6" style="accent-color: #10b981;">
+          </div>
+
+          <div class="sandbox-slider-group">
+            <div class="sandbox-slider-label"><span>⚡ Timeline Divergence Rate</span><span id="pu-val-rate" class="text-cyan">74%</span></div>
+            <input type="range" id="pu-slider-rate" class="sandbox-slider" min="10" max="100" step="5" value="74">
+          </div>
+
+          <!-- Dynamic Active Timelines Display -->
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600;">Active Branching Timelines:</div>
+          <div id="pu-timelines-display" style="background: rgba(5, 10, 20, 0.85); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: var(--radius-sm); padding: 12px; min-height: 70px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center;"></div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px;">
+            <div class="sim-metric-box" style="padding: 10px;"><div id="pu-metric-stability" class="sim-val" style="color: #34d399; font-size: 1.25rem;">98.4%</div><div class="sim-lbl">Quantum Coherence</div></div>
+            <div class="sim-metric-box" style="padding: 10px;"><div id="pu-metric-entropy" class="sim-val" style="color: #f59e0b; font-size: 1.25rem;">0.24 ΔS</div><div class="sim-lbl">Timeline Entropy</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI-OS Project Card + Interactive Cognitive Kernel Sandbox -->
+      <div class="project-featured glass-panel" style="margin-top: 36px;">
+        <div>
+          <div style="display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.8rem; font-weight: 700; margin-bottom: 12px;">
+            <i class="fa-solid fa-desktop"></i> Next-Gen Agentic OS &amp; Cognitive Kernel
+          </div>
+          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 16px;">AI-OS — Intelligent Agentic Operating System</h3>
+          <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 1rem; line-height: 1.6;">
+            A futuristic web-based AI Operating System frontend featuring an autonomous cognitive desktop environment, intelligent process scheduling, multi-agent IPC message bus, dynamic window orchestration, and streaming tool execution.
+          </p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;">
+            <span class="tag" style="border-color: #38bdf8; color: #38bdf8;">Next.js</span>
+            <span class="tag" style="border-color: var(--primary); color: var(--primary);">TypeScript</span>
+            <span class="tag" style="border-color: #a855f7; color: #c084fc;">Agentic Kernel</span>
+            <span class="tag" style="border-color: #34d399; color: #34d399;">Multi-Agent IPC</span>
+            <span class="tag">Tailwind CSS</span>
+            <span class="tag">Vercel</span>
+          </div>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
+            <a href="https://ai-os-frontend-2xvfmd0bk-rishav-raj-s-projects4.vercel.app/" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #000;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live AI-OS Platform</a>
+            <button class="btn-secondary" onclick="openDetailModal('aios');"><i class="fa-solid fa-circle-info"></i> Complete Info</button>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE AI-OS KERNEL SANDBOX -->
+        <div class="sandbox-container">
+          <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-microchip text-cyan"></i> AI-OS Kernel Process &amp; Resource Manager
+          </h4>
+
+          <div style="margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Dispatch Kernel Agent Task:</label>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="chip-btn aios-task-btn active" data-task="agent --spawn 'Autonomous Code Reviewer' --priority=high">Code Agent</button>
+                <button type="button" class="chip-btn aios-task-btn" data-task="agent --spawn 'Financial RAG Synthesizer' --priority=realtime">RAG Agent</button>
+                <button type="button" class="chip-btn aios-task-btn" data-task="agent --spawn 'Multimodal Vision Inspector' --workers=4">Vision Agent</button>
+              </div>
+            </div>
+            <input type="text" id="aios-task-input" class="name-input" value="agent --spawn 'Autonomous Code Reviewer' --priority=high" style="text-align: left; padding: 10px 14px; font-size: 0.88rem; font-family: var(--font-code);" placeholder="Enter agent shell command...">
+          </div>
+
+          <div class="sandbox-slider-group">
+            <div class="sandbox-slider-label"><span>🧠 Context Memory Window</span><span id="aios-val-memory" class="text-purple">1024 MB</span></div>
+            <input type="range" id="aios-slider-memory" class="sandbox-slider" min="256" max="2048" step="128" value="1024" style="accent-color: #a855f7;">
+          </div>
+
+          <div class="sandbox-slider-group" style="margin-bottom: 14px;">
+            <div class="sandbox-slider-label"><span>⚡ Concurrent Agent Workers</span><span id="aios-val-workers" class="text-cyan">4 Threads</span></div>
+            <input type="range" id="aios-slider-workers" class="sandbox-slider" min="1" max="8" step="1" value="4">
+          </div>
+
+          <!-- Active AI Process Table -->
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600;">Active AI-OS Kernel Processes:</div>
+          <div id="aios-process-list" style="background: rgba(5, 10, 20, 0.85); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: var(--radius-sm); padding: 10px 14px; font-family: var(--font-code); font-size: 0.82rem; color: #e2e8f0; line-height: 1.6; max-height: 120px; overflow-y: auto;"></div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px;">
+            <div class="sim-metric-box" style="padding: 10px;"><div id="aios-metric-load" class="sim-val" style="color: #38bdf8; font-size: 1.25rem;">32%</div><div class="sim-lbl">Kernel Load</div></div>
+            <div class="sim-metric-box" style="padding: 10px;"><div id="aios-metric-latency" class="sim-val" style="color: #34d399; font-size: 1.25rem;">14 ms</div><div class="sim-lbl">IPC Latency</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Skill Galaxy -->
+    <section id="skills" class="section">
+      <div class="section-header">
+        <span class="section-tag">Capabilities & Stack</span>
+        <h2 class="section-title">Technical <span class="text-gradient">Skill Galaxy</span></h2>
+        <p class="section-desc">Click any skill card for complete proficiency details and project usage context.</p>
+      </div>
+
+      <div class="skills-filter">
+        <button class="filter-btn active" data-category="all">All Tech</button>
+        <button class="filter-btn" data-category="backend">Backend & .NET</button>
+        <button class="filter-btn" data-category="frontend">Frontend UI</button>
+        <button class="filter-btn" data-category="cloud">Cloud & Messaging</button>
+        <button class="filter-btn" data-category="ai">AI / ML & DBs</button>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-card glass-panel" data-category="backend" onclick="openDetailModal('bandhan');">
+          <div class="skill-icon-box"><i class="fa-solid fa-code"></i></div>
+          <div class="skill-info"><div class="skill-name">C# & ASP.NET Core</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%;"></div></div></div>
+        </div>
+        <div class="skill-card glass-panel" data-category="frontend" onclick="openDetailModal('bandhan');">
+          <div class="skill-icon-box"><i class="fa-brands fa-react"></i></div>
+          <div class="skill-info"><div class="skill-name">React.js & Redux</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div></div>
+        </div>
+        <div class="skill-card glass-panel" data-category="cloud" onclick="openDetailModal('devops');">
+          <div class="skill-icon-box"><i class="fa-brands fa-aws"></i></div>
+          <div class="skill-info"><div class="skill-name">AWS EKS & Cloud</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 88%;"></div></div></div>
+        </div>
+        <div class="skill-card glass-panel" data-category="cloud" onclick="openDetailModal('kafka');">
+          <div class="skill-icon-box"><i class="fa-solid fa-bolt"></i></div>
+          <div class="skill-info"><div class="skill-name">Apache Kafka & Redis</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div></div>
+        </div>
+        <div class="skill-card glass-panel" data-category="ai" onclick="openDetailModal('gaia');">
+          <div class="skill-icon-box"><i class="fa-solid fa-brain"></i></div>
+          <div class="skill-info"><div class="skill-name">OpenAI LLMs & RAG</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 87%;"></div></div></div>
+        </div>
+        <div class="skill-card glass-panel" data-category="backend" onclick="openDetailModal('gaia');">
+          <div class="skill-icon-box"><i class="fa-brands fa-python"></i></div>
+          <div class="skill-info"><div class="skill-name">Python & FastAPI</div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 88%;"></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Dev Terminal -->
+    <section id="terminal" class="section">
+      <div class="section-header">
+        <span class="section-tag">Interactive CLI Shell</span>
+        <h2 class="section-title">Developer <span class="text-gradient">Terminal Shell</span></h2>
+        <p class="section-desc">Type CLI commands to inspect Rishav Raj's raw resume data.</p>
+      </div>
+
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="mockup-header" style="padding: 0;">
+            <div class="mockup-dot red"></div><div class="mockup-dot yellow"></div><div class="mockup-dot green"></div>
+          </div>
+          <span class="terminal-title">rishav@portfolio-shell: ~</span>
+        </div>
+        <div id="terminal-output" class="terminal-body"></div>
+        <div class="terminal-input-row" style="padding: 12px 24px; background: #0b1120; border-top: 1px solid rgba(255,255,255,0.05);">
+          <span class="terminal-prompt">></span>
+          <input type="text" id="terminal-input" class="terminal-input" placeholder="Type 'help', 'experience', 'gaia', 'skills', or 'sudo hire'..." autocomplete="off">
+        </div>
+      </div>
+    </section>
+
+    <!-- Education Section -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-tag">Academic Foundation</span>
+        <h2 class="section-title">Education & <span class="text-gradient">Background</span></h2>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+        <div class="glass-panel" style="padding: 28px;" onclick="openDetailModal('education');">
+          <div style="color: var(--primary); font-size: 1.4rem; margin-bottom: 8px;"><i class="fa-solid fa-graduation-cap"></i></div>
+          <h3 style="font-size: 1.3rem; margin-bottom: 6px;">Birla Institute of Technology (BIT), Mesra</h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px;">BTech in Computer Science and Engineering</p>
+          <span class="tag">CGPA: 8.1</span>
+          <span style="float: right; color: var(--text-muted); font-size: 0.85rem;">2021 – 2025</span>
+        </div>
+
+        <div class="glass-panel" style="padding: 28px;" onclick="openDetailModal('education');">
+          <div style="color: #a855f7; font-size: 1.4rem; margin-bottom: 8px;"><i class="fa-solid fa-award"></i></div>
+          <h3 style="font-size: 1.3rem; margin-bottom: 6px;">SD ACAD — Class 12 (PCM)</h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px;">Senior Secondary Education</p>
+          <span class="tag" style="border-color: #a855f7; color: #a855f7;">Score: 92.6%</span>
+          <span style="float: right; color: var(--text-muted); font-size: 0.85rem;">May 2020</span>
+        </div>
+
+        <div class="glass-panel" style="padding: 28px;" onclick="openDetailModal('education');">
+          <div style="color: #34d399; font-size: 1.4rem; margin-bottom: 8px;"><i class="fa-solid fa-school"></i></div>
+          <h3 style="font-size: 1.3rem; margin-bottom: 6px;">GD DAV Public School — Class 10</h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px;">Secondary Education</p>
+          <span class="tag" style="border-color: #34d399; color: #34d399;">Score: 96.8%</span>
+          <span style="float: right; color: var(--text-muted); font-size: 0.85rem;">May 2018</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FULL CONTACT & HIRING HUB + TIMEZONE CALENDAR BOOKER -->
+    <section id="contact" class="section">
+      <div class="section-header">
+        <span class="section-tag">Let's Connect</span>
+        <h2 class="section-title">Get in Touch with <span class="text-gradient">Rishav Raj</span></h2>
+        <p class="section-desc">Open for leadership roles, high-scale .NET microservice engineering, or AI project collaborations.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 1040px; margin: 0 auto;">
+        <!-- Direct Contact Cards -->
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <a href="mailto:rishavrajjha24@gmail.com" class="glass-panel" style="padding: 24px; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 20px;">
+            <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(0, 240, 255, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Direct Email</div>
+              <div style="font-size: 1.05rem; font-weight: 700;">rishavrajjha24@gmail.com</div>
+            </div>
+          </a>
+
+          <a href="tel:+916201689764" class="glass-panel" style="padding: 24px; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 20px;">
+            <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(168, 85, 247, 0.1); color: #a855f7; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+              <i class="fa-solid fa-phone"></i>
+            </div>
+            <div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Phone Number</div>
+              <div style="font-size: 1.05rem; font-weight: 700;">(+91) 6201689764</div>
+            </div>
+          </a>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <a href="https://linkedin.com/in/rishav-raj-086207260" target="_blank" class="btn-secondary" style="justify-content: center;">
+              <i class="fa-brands fa-linkedin text-cyan"></i> LinkedIn
+            </a>
+            <a href="https://github.com/rishavraj2429" target="_blank" class="btn-secondary" style="justify-content: center;">
+              <i class="fa-brands fa-github text-purple"></i> GitHub
+            </a>
+          </div>
+        </div>
+
+        <!-- Interactive Meeting Booker with Timezone Support & .ics Download -->
+        <form id="calendar-booking-form" class="glass-panel" style="padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+          <h3 style="font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-calendar-check text-cyan"></i> Schedule Interview / Call (.ics Invite)
+          </h3>
+
+          <input type="text" id="book-name" class="name-input" placeholder="Your Full Name" required style="text-align: left;">
+          <input type="email" id="book-email" class="name-input" placeholder="Your Email Address" required style="text-align: left;">
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <input type="date" id="book-date" class="name-input" required style="text-align: left;">
+            <input type="time" id="book-time" class="name-input" value="14:00" required style="text-align: left;">
+          </div>
+
+          <select id="book-tz" class="name-input" style="text-align: left; cursor: pointer;">
+            <option value="India IST (UTC+5:30)">🇮🇳 India Time (IST - UTC+5:30)</option>
+            <option value="US East (EST - UTC-5:00)">🇺🇸 US Eastern (EST - UTC-5)</option>
+            <option value="US West (PST - UTC-8:00)">🇺🇸 US Pacific (PST - UTC-8)</option>
+            <option value="UK GMT (UTC+0:00)">🇬🇧 London (GMT - UTC+0)</option>
+          </select>
+
+          <button type="submit" class="btn-primary" style="justify-content: center; margin-top: 6px;">
+            <i class="fa-solid fa-calendar-plus"></i> Book Call & Download .ics Invite
+          </button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- ==========================================================================
+       VIEW 2: 🔍 FULL GOOGLE SEARCH CLONE (#view-google)
+       ========================================================================== -->
+  <div id="view-google" class="view-container">
+    <!-- Full-page background video (muted, no audio) -->
+    <video class="view-bg-video" autoplay muted loop playsinline preload="auto">
+      <source src="videos/google.mp4" type="video/mp4">
+    </video>
+    <div style="padding-top: 40px; text-align: center;">
+      <div class="g-logo-text">
+        <span class="g-blue">R</span><span class="g-red">i</span><span class="g-yellow">s</span><span class="g-blue">h</span><span class="g-green">a</span><span class="g-red">v</span> 
+        <span class="g-blue">R</span><span class="g-red">a</span><span class="g-yellow">j</span>
+      </div>
+
+      <div class="g-search-box-wrap">
+        <i class="fa-solid fa-magnifying-glass g-search-icon"></i>
+        <input type="text" id="g-search-input" class="g-search-box" value="Rishav Raj .NET Full Stack Manager Bandhan Bank & GAIA AI" autocomplete="off">
+        <i class="fa-solid fa-microphone g-mic-icon" id="g-mic-trigger" title="Voice Search"></i>
+      </div>
+
+      <div class="g-btn-row">
+        <button id="g-search-btn" class="g-btn">Google Search</button>
+        <button id="g-lucky-btn" class="g-btn">I'm Feeling Lucky (Instant Hire)</button>
+      </div>
+
+      <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px;">
+        <button class="chip-btn g-chip-btn" data-query="Bandhan Bank Microservices">💼 Bandhan Bank Microservices</button>
+        <button class="chip-btn g-chip-btn" data-query="GAIA Climate AI Platform">🌍 GAIA Climate AI</button>
+        <button class="chip-btn g-chip-btn" data-query="nanoGPT Shakespeare Transformer">🎭 nanoGPT Shakespeare</button>
+        <button class="chip-btn g-chip-btn" data-query="TikTokenizer LLM Tokenizer">🔤 TikTokenizer</button>
+        <button class="chip-btn g-chip-btn" data-query="Parallel Universe Multiverse">🌌 Parallel Universe</button>
+        <button class="chip-btn g-chip-btn" data-query="AI-OS Operating System">💻 AI-OS Platform</button>
+        <button class="chip-btn g-chip-btn" data-query="BIT Mesra BTech CSE CGPA 8.1">🎓 BIT Mesra CGPA 8.1</button>
+        <button class="chip-btn g-chip-btn" data-query="C# .NET Core AWS Kafka Stack">⚡ C# .NET AWS Kafka</button>
+      </div>
+    </div>
+
+    <!-- Google Search Results & Knowledge Panel -->
+    <div class="g-serp-container">
+      <div>
+        <div style="color: #9aa0a6; font-size: 0.85rem; margin-bottom: 20px;">About 100,000 results (0.24 seconds)</div>
+
+        <div class="g-serp-item" onclick="openDetailModal('bandhan');">
+          <div class="g-serp-url">https://rishav-raj.dev › experience › bandhan-bank</div>
+          <div class="g-serp-title">Rishav Raj - .NET Full Stack Developer (Manager) @ Bandhan Bank</div>
+          <div class="g-serp-snippet">
+            Engineered <b>12+ ETB/NTB reporting microservices</b> on NEEV platform using ASP.NET MVC, C#, AngularJS, React.js, and SQL Server for <b>500+ bank branches</b>. Boosted platform efficiency by <b>35%</b> and integrated TransUnion Bureau APIs cutting manual lead generation effort by <b>80%</b>.
+          </div>
+        </div>
+
+        <div class="g-serp-item" onclick="openDetailModal('gaia');">
+          <div class="g-serp-url">https://codex-hack-ugrh.vercel.app › gaia-climate-ai</div>
+          <div class="g-serp-title">GAIA — Climate Action Governance Assistant [LIVE DEMO]</div>
+          <div class="g-serp-snippet">
+            Agentic AI climate planning platform integrating 5+ geospatial data layers, urban heat hotspot mapping across 1000+ locations, and simulation models. Built using React.js, FastAPI, Python, PostgreSQL, Leaflet.js, OpenAI LLMs, LangChain, and LangGraph RAG pipelines.
+          </div>
+        </div>
+
+        <div class="g-serp-item" onclick="openDetailModal('nanogpt');">
+          <div class="g-serp-url">https://nanogpt-shakespeare-fbkhytvvfjpnvxyn3omrxx.streamlit.app › nanogpt-shakespeare</div>
+          <div class="g-serp-title">nanoGPT Shakespeare — Interactive Generative AI Model [LIVE APP]</div>
+          <div class="g-serp-snippet">
+            Deep learning autoregressive transformer model trained on the Tiny Shakespeare dataset using  nanoGPT architecture. Deployed on Streamlit Cloud for real-time Shakespearean text generation with customizable temperature and sampling controls.
+          </div>
+        </div>
+
+        <div class="g-serp-item" onclick="openDetailModal('tiktokenizer');">
+          <div class="g-serp-url">https://tiktokenizer.vercel.app › tiktokenizer</div>
+          <div class="g-serp-title">TikTokenizer — Interactive LLM Tokenization Playground [LIVE APP]</div>
+          <div class="g-serp-snippet">
+            Real-time subword tokenization visualizer and playground built for exploring OpenAI BPE encodings (cl100k_base, o200k_base). Inspect token IDs, byte conversions, and compute exact API prompt costs using client-side WebAssembly.
+          </div>
+        </div>
+
+        <div class="g-serp-item" onclick="openDetailModal('paralleluniverse');">
+          <div class="g-serp-url">https://paralleluniverse-one.vercel.app › multiverse</div>
+          <div class="g-serp-title">Parallel Universe — Multiverse Experience Platform [LIVE APP]</div>
+          <div class="g-serp-snippet">
+            Interactive multiverse exploration platform visualizing branching quantum realities, parallel timelines, and dimensional divergence. Built with high-performance reactive web architecture and WebGL canvas simulations.
+          </div>
+        </div>
+
+        <div class="g-serp-item" onclick="openDetailModal('aios');">
+          <div class="g-serp-url">https://ai-os-frontend-2xvfmd0bk-rishav-raj-s-projects4.vercel.app › aios</div>
+          <div class="g-serp-title">AI-OS — Intelligent Agentic Operating System [LIVE DEMO]</div>
+          <div class="g-serp-snippet">
+            Next-generation web-based AI Operating System frontend featuring an autonomous cognitive desktop, multi-agent process scheduling, dynamic window management, and real-time streaming tool execution.
+          </div>
+        </div>
+
+        <div class="g-serp-item" onclick="openDetailModal('education');">
+          <div class="g-serp-url">https://rishav-raj.dev › education › bit-mesra</div>
+          <div class="g-serp-title">Birla Institute of Technology (BIT) Mesra — BTech CSE (8.1 CGPA)</div>
+          <div class="g-serp-snippet">
+            Completed BTech in Computer Science & Engineering (2021-2025) with 8.1 CGPA. Class 12 SD ACAD (92.6%), Class 10 GD DAV Public School (96.8%). Specialized in distributed algorithms and machine learning.
+          </div>
+        </div>
+      </div>
+
+      <!-- Google Knowledge Panel -->
+      <div class="g-knowledge-panel">
+        <div style="font-size: 1.5rem; color: #e8eaed; font-weight: 700; margin-bottom: 4px;">Rishav Raj</div>
+        <div style="color: #bdc1c6; font-size: 0.9rem; margin-bottom: 16px;">.NET Full Stack Manager & AI Engineer</div>
+        
+        <hr style="border: none; border-top: 1px solid #5f6368; margin-bottom: 16px;">
+
+        <div style="font-size: 0.88rem; line-height: 1.8;">
+          <div><b>Current Role:</b> Manager @ Bandhan Bank</div>
+          <div><b>Education:</b> BIT Mesra (BTech CSE, 8.1 CGPA)</div>
+          <div><b>Key Skills:</b> C#, ASP.NET Core, React, Kafka, Redis, AWS, RAG</div>
+          <div><b>Email:</b> rishavrajjha24@gmail.com</div>
+          <div><b>Phone:</b> (+91) 6201689764</div>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; gap: 10px;">
+            <a href="https://linkedin.com/in/rishav-raj-086207260" target="_blank" class="g-btn" style="flex:1; text-align:center; text-decoration:none;">LinkedIn</a>
+            <a href="https://github.com/rishavraj2429" target="_blank" class="g-btn" style="flex:1; text-align:center; text-decoration:none;">GitHub</a>
+          </div>
+          <a href="Rishav_Raj_Resume.pdf" download="Rishav_Raj_Resume.pdf" target="_blank" class="g-btn" style="text-align:center; text-decoration:none; background:#8ab4f8; color:#202124; font-weight:700;">
+            <i class="fa-solid fa-file-arrow-down"></i> Download Official Resume (PDF)
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       VIEW 3: 🍕 FULL ZOMATO APP CLONE (#view-zomato)
+       ========================================================================== -->
+  <div id="view-zomato" class="view-container">
+    <!-- Full-page background video (muted, no audio) -->
+    <video class="view-bg-video" autoplay muted loop playsinline preload="auto">
+      <source src="videos/zomato.mp4" type="video/mp4">
+    </video>
+    <div class="section" style="padding-top: 20px;">
+      <div class="zomato-hero-banner">
+        <div>
+          <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 10px;">
+            Delivering High-Scale Engineering to Your Doorstep! 🛵💨
+          </h2>
+          <p style="font-size: 1.1rem; opacity: 0.9;">
+            Order Rishav Raj's .NET Microservices, GAIA AI RAG Pipelines, and AWS Cloud Architecture in 30 Mins or Free!
+          </p>
+        </div>
+        <div style="font-size: 4rem;"><i class="fa-solid fa-pizza-slice"></i></div>
+      </div>
+
+      <h3 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 24px;">
+        🍽️ Engineering Specialties & Menu Options (Click cards for full details)
+      </h3>
+
+      <div class="zomato-menu-grid">
+        <!-- Dish 1 -->
+        <div class="zomato-card" onclick="openDetailModal('bandhan');">
+          <div class="zomato-card-img" style="background: linear-gradient(135deg, #e23744, #800a14);"><i class="fa-solid fa-server"></i></div>
+          <div class="zomato-card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h4 style="font-size: 1.2rem; font-weight: 700;">Bandhan Bank Microservices Platter</h4>
+              <span class="zomato-price-tag">35% Boost</span>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.88rem; margin-bottom: 16px;">
+              12+ ETB/NTB reporting microservices served hot with C#, ASP.NET Core, React, and SQL Server. Feeds 500+ bank branches!
+            </p>
+            <button class="btn-primary" style="width: 100%; justify-content: center; background: #e23744; color: #fff;">
+              <i class="fa-solid fa-receipt"></i> Inspect Complete Info
+            </button>
+          </div>
+        </div>
+
+        <!-- Dish 2 -->
+        <div class="zomato-card" onclick="openDetailModal('gaia');">
+          <div class="zomato-card-img" style="background: linear-gradient(135deg, #0284c7, #0f172a);"><i class="fa-solid fa-brain"></i></div>
+          <div class="zomato-card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h4 style="font-size: 1.2rem; font-weight: 700;">GAIA Climate AI Special</h4>
+              <span class="zomato-price-tag" style="background: rgba(2, 132, 199, 0.2); color: #38bdf8;">60% Cut</span>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.88rem; margin-bottom: 16px;">
+              Freshly baked Agentic RAG pipeline with LangChain, LangGraph, FastAPI, and Leaflet geospatial heatmaps across 1000+ mapped locations.
+            </p>
+            <button class="btn-primary" style="width: 100%; justify-content: center; background: #0284c7; color: #fff;">
+              <i class="fa-solid fa-receipt"></i> Inspect Complete Info
+            </button>
+          </div>
+        </div>
+
+        <!-- Dish 3 -->
+        <div class="zomato-card" onclick="openDetailModal('kafka');">
+          <div class="zomato-card-img" style="background: linear-gradient(135deg, #10b981, #064e3b);"><i class="fa-solid fa-bolt"></i></div>
+          <div class="zomato-card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h4 style="font-size: 1.2rem; font-weight: 700;">Kafka & Redis Sub-100ms Combo</h4>
+              <span class="zomato-price-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">&lt; 100ms</span>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.88rem; margin-bottom: 16px;">
+              High-speed asynchronous messaging pipeline with Apache Kafka, RabbitMQ, and Redis caching handling 10,000+ daily concurrent requests.
+            </p>
+            <button class="btn-primary" style="width: 100%; justify-content: center; background: #10b981; color: #fff;">
+              <i class="fa-solid fa-receipt"></i> Inspect Complete Info
+            </button>
+          </div>
+        </div>
+
+        <!-- Dish 4 -->
+        <div class="zomato-card" onclick="openDetailModal('devops');">
+          <div class="zomato-card-img" style="background: linear-gradient(135deg, #a855f7, #3b0764);"><i class="fa-brands fa-docker"></i></div>
+          <div class="zomato-card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h4 style="font-size: 1.2rem; font-weight: 700;">AWS EKS & DevOps Smoothie</h4>
+              <span class="zomato-price-tag" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">50% Cut</span>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.88rem; margin-bottom: 16px;">
+              Docker, Kubernetes, AWS EKS, Bitbucket, and CI/CD pipelines reducing release cycles by 50% with zero downtime.
+            </p>
+            <button class="btn-primary" style="width: 100%; justify-content: center; background: #a855f7; color: #fff;">
+              <i class="fa-solid fa-receipt"></i> Inspect Complete Info
+            </button>
+          </div>
+        </div>
+
+        <!-- Dish 5: nanoGPT Shakespeare -->
+        <div class="zomato-card" onclick="openDetailModal('nanogpt');">
+          <div class="zomato-card-img" style="background: linear-gradient(135deg, #7c3aed, #1e1b4b);"><i class="fa-solid fa-feather-pointed"></i></div>
+          <div class="zomato-card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h4 style="font-size: 1.2rem; font-weight: 700;">nanoGPT Shakespeare Special</h4>
+              <span class="zomato-price-tag" style="background: rgba(124, 58, 237, 0.2); color: #c084fc;">PyTorch LLM</span>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.88rem; margin-bottom: 16px;">
+              Generative transformer trained on the Tiny Shakespeare corpus with real-time token sampling and interactive Streamlit web deployment.
+            </p>
+            <button class="btn-primary" style="width: 100%; justify-content: center; background: #7c3aed; color: #fff;">
+              <i class="fa-solid fa-receipt"></i> Inspect Complete Info
+            </button>
+          </div>
+        </div>
+
+        <!-- Dish 6: TikTokenizer -->
+        <div class="zomato-card" onclick="openDetailModal('tiktokenizer');">
+          <div class="zomato-card-img" style="background: linear-gradient(135deg, #0284c7, #082f49);"><i class="fa-solid fa-shapes"></i></div>
+          <div class="zomato-card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h4 style="font-size: 1.2rem; font-weight: 700;">TikTokenizer BPE Platter</h4>
+              <span class="zomato-price-tag" style="background: rgba(0, 240, 255, 0.2); color: var(--primary);">Wasm BPE</span>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.88rem; margin-bottom: 16px;">
+              Color-coded subword tokens served fresh with WebAssembly and OpenAI tiktoken encodings.
+            </p>
+            <button class="btn-primary" style="width: 100%; justify-content: center; background: #0284c7; color: #fff;">
+              <i class="fa-solid fa-receipt"></i> Inspect Complete Info
+            </button>
+          </div>
+        </div>
+
+        <!-- Dish 7: Parallel Universe -->
+        <div class="zomato-card" onclick="openDetailModal('paralleluniverse');">
+          <div class="zomato-card-img" style="background: linear-gradient(135deg, #059669, #022c22);"><i class="fa-solid fa-atom"></i></div>
+          <div class="zomato-card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h4 style="font-size: 1.2rem; font-weight: 700;">Parallel Universe Multiverse Feast</h4>
+              <span class="zomato-price-tag" style="background: rgba(52, 211, 153, 0.2); color: #34d399;">Quantum WebGL</span>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.88rem; margin-bottom: 16px;">
+              Branching alternate dimension dishes and interactive multiverse timeline experiences.
+            </p>
+            <button class="btn-primary" style="width: 100%; justify-content: center; background: #059669; color: #fff;">
+              <i class="fa-solid fa-receipt"></i> Inspect Complete Info
+            </button>
+          </div>
+        </div>
+
+        <!-- Dish 8: AI-OS -->
+        <div class="zomato-card" onclick="openDetailModal('aios');">
+          <div class="zomato-card-img" style="background: linear-gradient(135deg, #0284c7, #1e293b);"><i class="fa-solid fa-desktop"></i></div>
+          <div class="zomato-card-body">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h4 style="font-size: 1.2rem; font-weight: 700;">AI-OS Kernel Thali</h4>
+              <span class="zomato-price-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">Agentic OS</span>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.88rem; margin-bottom: 16px;">
+              Full-course AI operating system serving multi-agent processes, cognitive window management, and real-time streaming tools.
+            </p>
+            <button class="btn-primary" style="width: 100%; justify-content: center; background: #0284c7; color: #fff;">
+              <i class="fa-solid fa-receipt"></i> Inspect Complete Info
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       VIEW 4: 🎬 FULL NETFLIX STREAMING CLONE (#view-netflix)
+       ========================================================================== -->
+  <div id="view-netflix" class="view-container">
+    <!-- Full-page background video (muted, no audio) -->
+    <video class="view-bg-video" autoplay muted loop playsinline preload="auto">
+      <source src="videos/netflix.mp4" type="video/mp4">
+    </video>
+    <div class="netflix-hero">
+      <div style="max-width: 650px;">
+        <div style="font-size: 0.85rem; font-weight: 800; color: #E50914; letter-spacing: 0.2em; margin-bottom: 12px;">N E T F L I X  O R I G I N A L</div>
+        <h1 style="font-size: 3.5rem; font-weight: 900; margin-bottom: 16px; line-height: 1;">RISHAV RAJ</h1>
+        <p style="font-size: 1.1rem; color: #e5e5e5; margin-bottom: 24px;">
+          TOP 1 IN TECH TODAY • 2026 • SEASON 1 • ULTRA HD 4K<br>
+          An ambitious .NET Full Stack Manager at Bandhan Bank architects high-throughput microservices while building agentic AI climate platforms. Based on true achievements.
+        </p>
+        <div style="display: flex; gap: 16px;">
+          <button class="btn-primary" style="background: #fff; color: #000; font-weight: 800;" onclick="document.getElementById('ai-fab').click();">
+            <i class="fa-solid fa-play"></i> Play AI Voice Intro
+          </button>
+          <button class="btn-secondary" style="background: rgba(109, 109, 110, 0.7); color: #fff; border: none;" onclick="openDetailModal('bandhan');">
+            <i class="fa-solid fa-circle-info"></i> More Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="netflix-row">
+      <div class="netflix-row-title">Trending Now (Click cards for full resume breakdown)</div>
+      <div class="netflix-cards-scroll">
+        <div class="netflix-card" onclick="openDetailModal('bandhan');">
+          <i class="fa-solid fa-building-columns text-cyan" style="font-size: 2rem; margin-bottom: 8px;"></i>
+          <div style="font-weight: 700; font-size: 0.9rem;">Bandhan Bank</div>
+        </div>
+        <div class="netflix-card" onclick="openDetailModal('gaia');">
+          <i class="fa-solid fa-earth-americas text-purple" style="font-size: 2rem; margin-bottom: 8px;"></i>
+          <div style="font-weight: 700; font-size: 0.9rem;">GAIA Climate AI</div>
+        </div>
+        <div class="netflix-card" onclick="openDetailModal('nanogpt');">
+          <i class="fa-solid fa-feather-pointed text-purple" style="font-size: 2rem; margin-bottom: 8px;"></i>
+          <div style="font-weight: 700; font-size: 0.9rem;">nanoGPT Shakespeare</div>
+        </div>
+        <div class="netflix-card" onclick="openDetailModal('tiktokenizer');">
+          <i class="fa-solid fa-shapes text-cyan" style="font-size: 2rem; margin-bottom: 8px;"></i>
+          <div style="font-weight: 700; font-size: 0.9rem;">TikTokenizer</div>
+        </div>
+        <div class="netflix-card" onclick="openDetailModal('paralleluniverse');">
+          <i class="fa-solid fa-atom text-emerald" style="font-size: 2rem; margin-bottom: 8px;"></i>
+          <div style="font-weight: 700; font-size: 0.9rem;">Parallel Universe</div>
+        </div>
+        <div class="netflix-card" onclick="openDetailModal('aios');">
+          <i class="fa-solid fa-desktop text-cyan" style="font-size: 2rem; margin-bottom: 8px;"></i>
+          <div style="font-weight: 700; font-size: 0.9rem;">AI-OS Platform</div>
+        </div>
+        <div class="netflix-card" onclick="openDetailModal('education');">
+          <i class="fa-solid fa-graduation-cap text-emerald" style="font-size: 2rem; margin-bottom: 8px;"></i>
+          <div style="font-weight: 700; font-size: 0.9rem;">BIT Mesra Degree</div>
+        </div>
+        <div class="netflix-card" onclick="openDetailModal('devops');">
+          <i class="fa-brands fa-docker text-cyan" style="font-size: 2rem; margin-bottom: 8px;"></i>
+          <div style="font-weight: 700; font-size: 0.9rem;">AWS EKS & DevOps</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       VIEW 5: 🎧 FULL SPOTIFY MUSIC PLAYER CLONE (#view-spotify)
+       ========================================================================== -->
+  <div id="view-spotify" class="view-container">
+    <div class="spotify-layout">
+      <div class="spotify-sidebar">
+        <div style="font-size: 1.4rem; font-weight: 800; color: #1DB954; margin-bottom: 30px; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-brands fa-spotify"></i> Rishavify
+        </div>
+        <div style="color: #b3b3b3; font-size: 0.9rem; margin-bottom: 12px; font-weight: 700;">YOUR LIBRARY</div>
+        <div style="display: flex; flex-direction: column; gap: 14px; font-size: 0.95rem; color: #b3b3b3;">
+          <div style="color: #fff; font-weight: 700; cursor:pointer;" onclick="openDetailModal('bandhan');"><i class="fa-solid fa-music text-emerald" style="margin-right: 8px;"></i> Bandhan Bank Hits</div>
+          <div style="cursor:pointer;" onclick="openDetailModal('gaia');"><i class="fa-solid fa-robot" style="margin-right: 8px;"></i> GAIA AI RAG Tracks</div>
+          <div style="cursor:pointer;" onclick="openDetailModal('nanogpt');"><i class="fa-solid fa-feather-pointed text-purple" style="margin-right: 8px;"></i> nanoGPT Shakespeare</div>
+          <div style="cursor:pointer;" onclick="openDetailModal('tiktokenizer');"><i class="fa-solid fa-shapes text-cyan" style="margin-right: 8px;"></i> TikTokenizer Beats</div>
+          <div style="cursor:pointer;" onclick="openDetailModal('paralleluniverse');"><i class="fa-solid fa-atom text-emerald" style="margin-right: 8px;"></i> Parallel Universe Track</div>
+          <div style="cursor:pointer;" onclick="openDetailModal('aios');"><i class="fa-solid fa-desktop text-cyan" style="margin-right: 8px;"></i> AI-OS Kernel Track</div>
+          <div style="cursor:pointer;" onclick="openDetailModal('education');"><i class="fa-solid fa-graduation-cap" style="margin-right: 8px;"></i> BIT Mesra Album</div>
+        </div>
+      </div>
+
+      <div class="spotify-main">
+        <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 30px;">
+          <div style="width: 140px; height: 140px; background: linear-gradient(135deg, #1DB954, #00f0ff); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: #000; font-weight: 900;">RR</div>
+          <div>
+            <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">PUBLIC PLAYLIST</div>
+            <h1 style="font-size: 3rem; font-weight: 900; line-height: 1.1;">Engineering Hits 2026</h1>
+            <p style="color: #b3b3b3; font-size: 0.95rem; margin-top: 8px;">Rishav Raj • 8 tracks, 28 min 10 sec (Click any track for details)</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="spotify-track-row" onclick="openDetailModal('bandhan');">
+            <div>
+              <div style="font-weight: 700; color: #fff;">1. NEEV Microservices Platform</div>
+              <div style="font-size: 0.85rem; color: #b3b3b3;">Bandhan Bank • C# & React.js</div>
+            </div>
+            <div style="color: #1DB954; font-weight: 700;">3:45 ▶ Info</div>
+          </div>
+
+          <div class="spotify-track-row" onclick="openDetailModal('gaia');">
+            <div>
+              <div style="font-weight: 700; color: #fff;">2. GAIA Climate AI Assistant</div>
+              <div style="font-size: 0.85rem; color: #b3b3b3;">LangGraph & RAG • FastAPI</div>
+            </div>
+            <div style="color: #1DB954; font-weight: 700;">4:12 ▶ Info</div>
+          </div>
+
+          <div class="spotify-track-row" onclick="openDetailModal('education');">
+            <div>
+              <div style="font-weight: 700; color: #fff;">3. BIT Mesra Graduation Symphony</div>
+              <div style="font-size: 0.85rem; color: #b3b3b3;">BTech CSE • 8.1 CGPA</div>
+            </div>
+            <div style="color: #1DB954; font-weight: 700;">2:50 ▶ Info</div>
+          </div>
+
+          <div class="spotify-track-row" onclick="openDetailModal('kafka');">
+            <div>
+              <div style="font-weight: 700; color: #fff;">4. Kafka & Redis Sub-100ms Beat</div>
+              <div style="font-size: 0.85rem; color: #b3b3b3;">Asynchronous Messaging • 10,000 req/s</div>
+            </div>
+            <div style="color: #1DB954; font-weight: 700;">3:35 ▶ Info</div>
+          </div>
+
+          <div class="spotify-track-row" onclick="openDetailModal('nanogpt');">
+            <div>
+              <div style="font-weight: 700; color: #fff;">5. nanoGPT Shakespeare Soliloquy</div>
+              <div style="font-size: 0.85rem; color: #b3b3b3;">Generative Transformer • PyTorch &amp; Streamlit</div>
+            </div>
+            <div style="color: #1DB954; font-weight: 700;">3:18 ▶ Info</div>
+          </div>
+
+          <div class="spotify-track-row" onclick="openDetailModal('tiktokenizer');">
+            <div>
+              <div style="font-weight: 700; color: #fff;">6. TikTokenizer BPE Symphony</div>
+              <div style="font-size: 0.85rem; color: #b3b3b3;">Token Visualizer • WebAssembly &amp; tiktoken</div>
+            </div>
+            <div style="color: #1DB954; font-weight: 700;">3:05 ▶ Info</div>
+          </div>
+
+          <div class="spotify-track-row" onclick="openDetailModal('paralleluniverse');">
+            <div>
+              <div style="font-weight: 700; color: #fff;">7. Parallel Universe Multiverse Voyage</div>
+              <div style="font-size: 0.85rem; color: #b3b3b3;">Quantum Realities • React &amp; WebGL</div>
+            </div>
+            <div style="color: #1DB954; font-weight: 700;">3:30 ▶ Info</div>
+          </div>
+
+          <div class="spotify-track-row" onclick="openDetailModal('aios');">
+            <div>
+              <div style="font-weight: 700; color: #fff;">8. AI-OS Kernel Symphony</div>
+              <div style="font-size: 0.85rem; color: #b3b3b3;">Cognitive Desktop • Multi-Agent Scheduling</div>
+            </div>
+            <div style="color: #1DB954; font-weight: 700;">3:55 ▶ Info</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       FLOATING AI CHATBOT WIDGET
+       ========================================================================== -->
+  <div class="ai-widget-container">
+    <div id="ai-fab" class="ai-fab" title="Chat with Rishav AI Bot">
+      <i class="fa-solid fa-robot" style="font-size: 1.6rem;"></i>
+      <div class="ai-fab-badge">AI</div>
+    </div>
+
+    <div id="ai-chat-box" class="ai-chat-box hidden">
+      <div class="chat-header">
+        <div class="chat-bot-info">
+          <div class="chat-avatar-mini">🤖</div>
+          <div>
+            <div style="font-weight: 700; font-size: 0.95rem;">Rishav AI Assistant</div>
+            <div style="font-size: 0.75rem; color: #34d399;">● Online & Resume Trained</div>
+          </div>
+        </div>
+        <button id="chat-close-btn" class="btn-icon" style="width:30px; height:30px;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div id="chat-messages" class="chat-messages">
+        <div class="chat-msg bot">
+          Hi! I am <b>Rishav AI Assistant</b> 🤖. Ask me anything about Rishav Raj's work at Bandhan Bank, his GAIA AI climate project, skills, or education!
+        </div>
+      </div>
+
+      <div class="quick-chips">
+        <button class="chip-btn" data-prompt="Download official resume PDF">📄 Resume PDF</button>
+        <button class="chip-btn" data-prompt="stop speaking">🛑 Stop Voice</button>
+        <button class="chip-btn" data-prompt="Tell me about Bandhan Bank experience">💼 Bandhan Bank</button>
+        <button class="chip-btn" data-prompt="Explain GAIA climate AI project">🌍 GAIA Project</button>
+        <button class="chip-btn" data-prompt="Tell me about the nanoGPT Shakespeare project">🎭 nanoGPT</button>
+        <button class="chip-btn" data-prompt="Explain TikTokenizer LLM project">🔤 TikTokenizer</button>
+        <button class="chip-btn" data-prompt="Tell me about the Parallel Universe project">🌌 Multiverse</button>
+        <button class="chip-btn" data-prompt="Explain the AI-OS Operating System project">💻 AI-OS</button>
+        <button class="chip-btn" data-prompt="What technical skills does Rishav have?">⚡ Tech Stack</button>
+      </div>
+
+      <div class="chat-input-area">
+        <button id="mic-btn" class="mic-btn" title="Speak via Voice"><i class="fa-solid fa-microphone"></i></button>
+        <input type="text" id="chat-input" class="chat-input" placeholder="Ask anything about Rishav..." autocomplete="off">
+        <button id="chat-send-btn" class="btn-icon" style="background: var(--primary); color: #000;"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/audio.js"></script>
+  <script src="js/mascot.js"></script>
+  <script src="js/llm.js"></script>
+  <script src="js/terminal.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
